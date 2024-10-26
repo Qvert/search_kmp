@@ -32,14 +32,16 @@ def search(string: str, sub_string: Union[str, List[str]],
 
     return kmp_search(string, sub_string, method, count)
 
-def kmp_search(string: str, sub_strings: List[str], method: str = 'first', count: Optional[int] = None) ->\
-               Optional[Dict[str, Tuple[int, ...]]]:
+def kmp_search(string: str, sub_strings: List[str], method: str = 'first', count: Optional[int] = None) -> \
+        tuple[int, ...] | dict[str, tuple[int, ...]] | None:
     results = {}
     for sub_string in sub_strings:
         lps = build_kmp_table(sub_string)
         positions = kmp_search_in_string(string, sub_string, lps, method, count)
         if positions:
             results[sub_string] = tuple(positions)
+    if len(results) == 1:
+        return results[sub_strings[0]] if results else None
     return results if results else None
 
 def kmp_search_in_string(string: str, pattern: str, lps: List[int], method: str, count: Optional[int]) -> List[int]:
